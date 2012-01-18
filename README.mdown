@@ -81,8 +81,6 @@ Mixins
     
     var example3 = new Example3();
     example3.mixin1Method1();
-    
----
 
 Static Methods
 --------------
