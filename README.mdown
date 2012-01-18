@@ -73,7 +73,7 @@ Mixins
     
     var Example3 = Blueprint({
         Extends : Example2, // Optional
-        Implements : Mixins,
+        Implements : [Mixins],
         method2 : function(){
             Example3.Super.method2.call(this) // Call Parent method
         }
