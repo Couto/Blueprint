@@ -13,6 +13,8 @@
  * To Public License, Version 2, as published by Sam Hocevar. See
  * http://sam.zoy.org/wtfpl/COPYING for more details.
  *
+ * @copyright 2012, Luis Couto
+ *
  * @param {Object} methods Object with methods
  * @returns Function
  */
