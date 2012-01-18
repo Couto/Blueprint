@@ -4,7 +4,7 @@ Blueprint - Sugar syntax for Prototypal Inheritance
 Why another?
 ------------
 
-I wanted a small utility (871 bytes gzipped) that could easily be used, to create Classes, but with the MooTools Class interface, and without the overhead…
+I wanted a small utility (871 bytes gzipped) that could easily be used to create Classes, but with the MooTools' Class interface, and without the overhead…
 
 yeahh… that's the only reason.
 
@@ -13,9 +13,10 @@ It supports:
 
 * __Inheritance__ one object can inherit methods from another.
 * __Mixins__ one object can "inherit" several methods from several objects, as their own.
-* __Context__ A Bind method similar to MooTools where you could easily fix the methods context (useful for events…)
-* __Super__ Call parent methods, even if they were "overwritten"
+* __Context__ A Bind method similar to MooTools where you could easily fix the methods context (useful for events…).
+* __Super__ Call parent methods, even if they were "overwritten".
 * __Constructor/Lazy Instantion__ 
+* __Static Methods__ these are not inherited by child classes.
 * __Fast__ its instanciation should be *au pair* with the fastest Class systems available. [JSPerf Perfomance Page](http://jsperf.com/moo-resig-ender-my/8)
 
 Beware
@@ -24,8 +25,8 @@ __it's still under development__
 
 TODO
 ----
-* A decent page for tests
-* Finish testing
+* A decent page for tests.
+* Finish testing.
 * Measure the Parent call performace.
 
 ----
@@ -74,7 +75,7 @@ Mixins
         Extends : Example2, // Optional
         Implements : Mixins,
         method2 : function(){
-            Example2.Super.method2.call(this) // Call Parent method
+            Example3.Super.method2.call(this) // Call Parent method
         }
     });
     
@@ -82,5 +83,22 @@ Mixins
     example3.mixin1Method1();
     
 ---
+
+Static Methods
+--------------
+
+    var Example4 = Blueprint({
+        method4 : function(){
+            Example4.Super.method2.call(this) // Call Parent method
+        },
+        Static : {
+            staticMethod : function(){}
+        }
+    });
+    
+    Example4.staticMethod();
+    
+---
+
 
 Feel free to pull requests, open issues and so on… right now, i'm quite open to ideas, improvements and suggestions.
