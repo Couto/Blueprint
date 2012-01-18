@@ -99,4 +99,4 @@ Static Methods
 ---
 
 
-Feel free to pull requests, open issues and so on… right now, i'm quite open to ideas, improvements and suggestions.
+Feel free to pull requests, open issues and so on… right now i'm quite open to ideas, improvements and suggestions.
