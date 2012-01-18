@@ -3,85 +3,105 @@
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <title>Blueprint - Tests Page</title>
+        <link rel="stylesheet" href="qunit/qunit/qunit.css">
+        <script type="text/javascript" charset="utf-8" src="qunit/qunit/qunit.js"></script>
+        <script type="text/javascript" charset="utf-8" src="../src/blueprint.src.js"></script>
     </head>
     <body>
-        
-        <script type="text/javascript" charset="utf-8" src="../src/blueprint.js"></script>
+        <h1 id="qunit-header">Blueprint's Unit Tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+        <div id="qunit-fixture">test markup, will be hidden</div>
         <script>
+            var First = Blueprint({
+                   method1 : function () {
+                       document.write("I was written with the method1 from First <br />");
+                   },
+                   method2 : function () {
+                       document.write("I was writter with the method2 from the First <br />")
+                   }
+                }),
+            
+                Second = Blueprint({
+                   Extends : First,
+                   method3 : function(){
+                       document.write("I was written with the method3 from the Second <br />");
+                       Second.Super.method1.call(this);
+                   },
+                   Static : {
+                       staticFunction : function () {
+                           document.write("I was written with the staticFunction from the Second <br />");
+                       }
+                   }
+                }),
+            
+                Third = Blueprint({
+                   Extends : Second,
+                   method3 : function () {
+                        document.write("I was written with the method3 from the Third <br />");
+                        Third.Super.method3.call(this);
+                   }
+                }),
+            
+                Mixin = Blueprint({
+                   mixinMethod1 : function () {
+                       document.write("I was written with the mixinMethod1 from the Mixin <br />");
+                   },
+                   mixinMethod2 : function () {
+                       document.write("I was written with the mixinMethod2 from the Mixin <br />");
+                   },
+                   mixinMethod3 : function () {
+                       document.write("I was written with the mixinMethod3 from the Mixin <br />");
+                   }
+                }),
+            
+                Forth = new Blueprint({
+                   Extends : Third,
+                   Implements : [Mixin],
+                   init : function () {
+                       document.write("I was written with the init from the Forth <br />");
+                   },
+                   method4 : function(){
+                       document.write("I was written with the method4 from the Forth and i called the mixinMethod3 <br />");
+                       this.mixinMethod3()
+                   }
+                }),
+                
+                first = new First(),
+                second = new Second(),
+                third = new Third(),
+                forth = new Forth();
+    
+            
+        
+            module("Instanciation Tests");
+                
+            test("Resulted Object Inherits Class's Prototype", function() {                    
+                deepEqual(first, First.prototype, "instanciated object equals Class's prototype" );
+                equal(first.__proto__, First.prototype, "instanciated object's __proto__ contains the exact same object than Class as its prototype");
+                expect(2)
+            });
+                
+            test("Result Object Inherits Parent's Class Prototye", function(){
+                deepEqual(second, Second.prototype, "are equal");
+                equal(second.__proto__, Second.prototype.prototype)
+            });
+                
+            test("Result Object Inherits Mixin's Prototype", function(){
+                    
+            });
 
-                var First = Blueprint({
-                    init: function () {
-                        document.write("I was written with the init from First <br />");
-                    },
-                    method1 : function () {
-                        document.write("I was written with the method1 from First <br />");
-                    },
-                    method2 : function () {
-                        document.write("I was writter with the method2 from the First <br />")
-                    }
-                });
-                
-                var Second = Blueprint({
-                    Extends : First,
-                    method3 : function(){
-                        document.write("I was written with the method3 from the Second <br />");
-                        Second.Super.method1.call(this);
-                    },
-                    Static : {
-                        staticFunction : function () {
-                            document.write("I was written with the staticFunction from the Second <br />");
-                        }
-                    }
-                });
-                
-                var Third = Blueprint({
-                    Extends : Second,
-                    method3 : function () {
-                         document.write("I was written with the method3 from the Third <br />");
-                         Third.Super.method3.call(this);
-                    }
-                });
-                
-                var Mixin = Blueprint({
-                    mixinMethod1 : function () {
-                        document.write("I was written with the mixinMethod1 from the Mixin <br />");
-                    },
-                    mixinMethod2 : function () {
-                        document.write("I was written with the mixinMethod2 from the Mixin <br />");
-                    },
-                    mixinMethod3 : function () {
-                        document.write("I was written with the mixinMethod3 from the Mixin <br />");
-                    }
-                });
-                
-                var Forth = new Blueprint({
-                    Extends : Third,
-                    Implements : [Mixin],
-                    init : function () {
-                        document.write("I was written with the init from the Forth <br />");
-                    },
-                    method4 : function(){
-                        document.write("I was written with the method4 from the Forth and i called the mixinMethod3 <br />");
-                        this.mixinMethod3()
-                    }
-                });
-                
-                
-                var first = new First();
-                first.method1();
-                first.method2();
-                
-                var second = new Second();
-                second.method3();
-                Second.staticFunction();
-                
-                var third = new Third();
-                third.method3();
-                
-                var forth = new Forth();
-                forth.mixinMethod1();
-                forth.method4();
+            module("Static Methods");
 
+            test("Result Object got methods declared as Static", function(){
+                    
+            });
+                
+            module("Parenting");
+
+                
         </script>
     </body>
 </html>
