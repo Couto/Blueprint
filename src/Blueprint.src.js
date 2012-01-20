@@ -49,7 +49,7 @@ function Blueprint (methods) {
      */
     
     function implement (arr, target){
-        console.log(arr);
+
         var i = arr.length - 1,
             k, constructorBck;
             
