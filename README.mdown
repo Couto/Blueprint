@@ -17,7 +17,7 @@ It supports:
 * __Super__ Call parent methods, even if they were "overwritten".
 * __Constructor/Lazy Instantion__ 
 * __Static Methods__ these are not inherited by child classes.
-* __Fast__ its instanciation should be *au pair* with the fastest Class systems available. [JSPerf Perfomance Page](http://jsperf.com/moo-resig-ender-my/8)
+* __Fast__ its instanciation should be *au pair* with the fastest Class systems available. [JSPerf Perfomance Page](http://jsperf.com/moo-resig-ender-my/9)
 
 Beware
 ------
