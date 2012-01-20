@@ -46,22 +46,24 @@ function Blueprint (methods) {
      * @param {Array} arr Array of objects that will give their methods
      * @param {Object} Target that will receive the methods
      * @returns undefined
-     */
-    
+     */ 
     function implement (arr, target){
 
         var i = arr.length - 1,
             k, constructorBck;
             
-        for ( ; i >= 0; i -= 1) {
+        for (i; i >= 0; i -= 1) {
             if (arr[i].prototype.constructor) {
                 constructorBck = arr[i].prototype.constructor;
                 delete arr[i].prototype.constructor;
                 extend(arr[i].prototype, target.prototype);
                 arr[i].prototype.constructor = constructorBck;
-            } else { extend(arr[i].prototype, target.prototype); }
+            } else { 
+                extend(arr[i].prototype, target.prototype); 
+            }
         }
     }
+    
     
     
     /**
@@ -73,12 +75,15 @@ function Blueprint (methods) {
      */
     function proxies (arr, context, target) {
         var proxy = function(func){
-            if (Function.prototype.bind) { return func.bind(context); } 
-            else {
-                return function () {
-                    return func.apply(context, arguments);
-                };
-            }
+            
+            if (Function.prototype.bind) { 
+                return func.bind(context); 
+            } 
+
+            return function () {
+                return func.apply(context, arguments);
+            };
+
         }, i = arr.length - 1;
         
         for (i; i >= 0; i -=1 ) {
