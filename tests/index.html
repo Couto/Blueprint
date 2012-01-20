@@ -143,6 +143,16 @@
                equal(Second.Super, First.prototype, 'It can access it\'s parent');
             });
 
+
+
+            module("Static Methods");
+
+
+
+            test("Static methods should be accessible", function(){
+                notEqual(Second.staticFunction, undefined, "Static methods are acessible")
+            });
+
         </script>
     </body>
 </html>
