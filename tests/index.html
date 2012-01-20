@@ -25,7 +25,7 @@
                    }
                 },
                 First = Blueprint(base),
-            
+
                 Second = Blueprint({
                    Extends : First,
                    method3 : function(){
@@ -38,7 +38,9 @@
                        }
                    }
                 }),
-            
+
+
+
                 Mixin = Blueprint({
                    mixinMethod1 : function () {
                        document.write("I was written with the mixinMethod1 from the Mixin <br />");
@@ -50,13 +52,16 @@
                        document.write("I was written with the mixinMethod3 from the Mixin <br />");
                    }
                 }),
-                
+
+
+
                 Third = Blueprint({
                    Implements : [Mixin],
                    method4 : function () {}
                 }),
-                
-                
+
+
+
                 Forth = new Blueprint({
                    Extends : Third,
                    Implements : [Mixin],
@@ -69,16 +74,17 @@
                        this.mixinMethod3()
                    }
                 });
-                
-                
-                
+
+
+
                 third = new Third(),
-                
-    
-            
-        
+
+
+
             module("Instanciation Tests");
-                
+
+
+
             test("Instanciated Object should have Class methods and Properties", function() {
                 var first = new First();
                 equal(first.method1, base.method1, "Instanciated Object has method from base Object");
@@ -89,7 +95,9 @@
                 equal(first.property, First.prototype.property, "Instanciated Object has property from Class prototype");
                 expect(6)
             });
-                
+
+
+
             test("Class extending a Class, should have methods from Class and extended Class", function(){
                 var second = new Second();
                 equal(second.method3, Second.prototype.method3, "Instanciated Object has method from Class child");
@@ -101,32 +109,40 @@
                 equal(second.property, First.prototype.property, "Instanciated Object has property from extended Class");
                 expect(7);
             });
-                
+
+
+
             test("Class with defined init should run at instanciation time", function(){
                 var div = document.createElement('div'),
                     forth = new Forth(div),
                     allocatedDiv = document.getElementById('example');
-                    
+
                 equal(div, allocatedDiv, "Object was in the DOM meaning that init ran at initialization");
                 expect(1);
             });
+
+
 
             test("Class with declared Mixins, should have mixin's methods", function(){
                 var third = new Third();
                 equal(third.mixinMethod1, Mixin.prototype.mixinMethod1, 'Class inherited Mixin\'s method');
                 equal(third.mixinMethod2, Mixin.prototype.mixinMethod2, 'Class inherited Mixin\'s method');
-                equal(third.mixinMethod3, Mixin.prototype.mixinMethod3, 'Class inherited Mixin\'s method');    
+                equal(third.mixinMethod3, Mixin.prototype.mixinMethod3, 'Class inherited Mixin\'s method');
                 equal(third.method4, Third.prototype.method4, 'Class remain with it\'s own method');
                 expect(4);
             });
-                
+
+
+
             module("Parenting");
-            
+
+
+
             test("Class should have access to it's parent", function(){
                var second = new Second();
-               equal(Second.Super, First.prototype, 'It can access it\'s parent'); 
+               equal(Second.Super, First.prototype, 'It can access it\'s parent');
             });
-                
+
         </script>
     </body>
 </html>
