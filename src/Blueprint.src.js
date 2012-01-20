@@ -49,10 +49,11 @@ function Blueprint (methods) {
      */
     
     function implement (arr, target){
+        console.log(arr);
         var i = arr.length - 1,
             k, constructorBck;
             
-        for (i; i >= 0; i -= 1) {
+        for ( ; i >= 0; i -= 1) {
             if (arr[i].prototype.constructor) {
                 constructorBck = arr[i].prototype.constructor;
                 delete arr[i].prototype.constructor;
