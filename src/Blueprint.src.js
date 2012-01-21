@@ -4,7 +4,7 @@
  *
  * @author Luis Couto
  * @contact lcouto87@gmail.com
- * @version 0.1
+ * @version 0.2
  *
  * @license
  *     This program is free software. It comes without any warranty, to
@@ -15,6 +15,21 @@
  *
  * @copyright 2012, Luis Couto
  *
+ * @example
+ *      var Example = Blueprint({
+ *          Extends : ParentBlueprint,
+ *          Borrows : [Mixin1, Mixin2],
+ *          Binds   : ['method1', 'method2'],
+ *          Statics : {
+ *              staticMethod1 : function(){},
+ *              staticMethod2 : function(){},
+ *              staticMethod3 : function(){},
+ *          },
+ *          initialize : function () {},
+ *          method1 : function () {},
+ *          method2 : function () {},
+ *          method3 : function () {}
+ *      });
  * @param {Object} methods Object
  * @returns Function
  */
@@ -53,19 +68,19 @@ function Blueprint(methods) {
      * @param {Object} Target that will receive the methods
      * @returns undefined
      */
-    function implement(arr, target) {
+    function borrows(arr, target) {
 
         var i = arr.length - 1,
             constructorBck;
 
         for (i; i >= 0; i -= 1) {
-            if (arr[i].prototype.constructor) {
+            if (arr[i].prototype && arr[i].prototype.constructor) {
                 constructorBck = arr[i].prototype.constructor;
                 delete arr[i].prototype.constructor;
                 extend(arr[i].prototype, target.prototype);
                 arr[i].prototype.constructor = constructorBck;
             } else {
-                extend(arr[i].prototype, target.prototype);
+                extend(arr[i].prototype || arr[i], target.prototype);
             }
         }
     }
@@ -79,7 +94,7 @@ function Blueprint(methods) {
      * @param {Function}
      * @returns function handler with fixed context
      */
-    function proxies(arr, context, target) {
+    function binds(arr, context, target) {
         var proxy = function (func) {
 
             if (Function.prototype.bind) {
@@ -116,11 +131,11 @@ function Blueprint(methods) {
 
 
 
-    blueprint = methods.init || function blueprint() {};
+    blueprint = methods.initialize || function blueprint() {};
 
     if (methods.Extends) {
-        blueprint.Super = methods.Extends.prototype;
-        blueprint.prototype = clone(blueprint.Super);
+        blueprint.Parent = methods.Extends.prototype;
+        blueprint.prototype = clone(blueprint.Parent);
         extend(methods, blueprint.prototype);
     } else {
         blueprint.prototype = methods;
@@ -128,10 +143,10 @@ function Blueprint(methods) {
 
     blueprint.prototype.constructor = blueprint;
 
-    if (methods.Implements) { implement(methods.Implements, blueprint); }
-    if (methods.Bind) { proxies(methods.Bind, blueprint, blueprint.prototype); }
-    if (methods.Static) {
-        extend(methods.Static, blueprint);
+    if (methods.Borrows) { borrows(methods.Borrows, blueprint); }
+    if (methods.Binds) { binds(methods.Binds, blueprint, blueprint.prototype); }
+    if (methods.Statics) {
+        extend(methods.Statics, blueprint);
         delete blueprint.prototype.Static;
     }
 

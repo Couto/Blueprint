@@ -16,7 +16,7 @@
         <div id="qunit-fixture">test markup, will be hidden</div>
         <script>
             var base = {
-                    property: "foo",
+                property: "foo",
                    method1 : function () {
                        document.write("I was written with the method1 from First <br />");
                    },
@@ -30,9 +30,9 @@
                    Extends : First,
                    method3 : function(){
                        document.write("I was written with the method3 from the Second <br />");
-                       Second.Super.method1.call(this);
+                       Second.Parent.method1.call(this);
                    },
-                   Static : {
+                   Statics : {
                        staticFunction : function () {
                            document.write("I was written with the staticFunction from the Second <br />");
                        }
@@ -56,7 +56,7 @@
 
 
                 Third = Blueprint({
-                   Implements : [Mixin],
+                   Borrows : [Mixin],
                    method4 : function () {}
                 }),
 
@@ -64,8 +64,8 @@
 
                 Forth = new Blueprint({
                    Extends : Third,
-                   Implements : [Mixin],
-                   init : function (div) {
+                   Borrows : [Mixin],
+                   initialize : function (div) {
                        div.setAttribute('id', 'example');
                        document.getElementById('qunit-fixture').appendChild(div);
                    },
@@ -112,7 +112,7 @@
 
 
 
-            test("Class with defined init should run at instanciation time", function(){
+            test("Class with defined initialize should run at instanciation time", function(){
                 var div = document.createElement('div'),
                     forth = new Forth(div),
                     allocatedDiv = document.getElementById('example');
@@ -140,7 +140,7 @@
 
             test("Class should have access to it's parent", function(){
                var second = new Second();
-               equal(Second.Super, First.prototype, 'It can access it\'s parent');
+               equal(Second.Parent, First.prototype, 'It can access it\'s parent');
             });
 
 
