@@ -40,7 +40,6 @@
                 }),
 
 
-
                 Mixin = Blueprint({
                    mixinMethod1 : function () {
                        document.write("I was written with the mixinMethod1 from the Mixin <br />");
@@ -129,6 +128,26 @@
                 equal(third.mixinMethod2, Mixin.prototype.mixinMethod2, 'Class inherited Mixin\'s method');
                 equal(third.mixinMethod3, Mixin.prototype.mixinMethod3, 'Class inherited Mixin\'s method');
                 equal(third.method4, Third.prototype.method4, 'Class remain with it\'s own method');
+                expect(4);
+            });
+
+            test("Class using plain object as mixins, should have mixins methods", function(){
+                var mixinObj = {
+                    mixinObjMethod1 : function(){},
+                    mixinObjMethod2 : function(){},
+                    mixinObjMethod3 : function(){},
+                },
+                Fifth = Blueprint({
+                    Borrows : [mixinObj],
+                    method1 : function(){},
+                    method2 : function(){}
+                }),
+                fifth = new Fifth();
+                console.log(fifth);
+                equal(mixinObj.mixinObjMethod1, fifth.mixinObjMethod1, 'Class inherited Mixin\'s method');
+                equal(mixinObj.mixinObjMethod2, fifth.mixinObjMethod2, 'Class inherited Mixin\'s method');
+                equal(mixinObj.mixinObjMethod3, fifth.mixinObjMethod3, 'Class inherited Mixin\'s method');
+                equal(fifth.method1, Fifth.prototype.method1, 'Class remain with it\'s own method');
                 expect(4);
             });
 
