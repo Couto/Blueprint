@@ -4,7 +4,7 @@ Blueprint - Sugar syntax for Prototypal Inheritance
 Why another?
 ------------
 
-I wanted a small utility (858B bytes minified) that could easily be used to create Classes, but with a MooTools' Class interface alike, and without the overhead…
+I wanted a small utility (858B bytes minified/413 bytes gzipped) that could easily be used to create Classes, but with a MooTools' Class interface alike, and without the overhead…
 
 yeahh… that's the only reason.
 
