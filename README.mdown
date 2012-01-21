@@ -4,7 +4,7 @@ Blueprint - Sugar syntax for Prototypal Inheritance
 Why another?
 ------------
 
-I wanted a small utility (871 bytes gzipped) that could easily be used to create Classes, but with the MooTools' Class interface, and without the overhead…
+I wanted a small utility (858B bytes minified) that could easily be used to create Classes, but with a MooTools' Class interface alike, and without the overhead…
 
 yeahh… that's the only reason.
 
@@ -15,7 +15,7 @@ It supports:
 * __Mixins__ one object can "inherit" several methods from several objects, as their own.
 * __Context__ A Bind method similar to MooTools where you could easily fix the methods context (useful for events…).
 * __Parent__ Call parent methods, even if they were "overwritten".
-* __Constructor/Lazy Instantion__ 
+* __Constructor/Lazy Instantion__
 * __Static Methods__ these are not inherited by child classes.
 * __Fast__ its instanciation should be *au pair* with the fastest Class systems available. [JSPerf Perfomance Page](http://jsperf.com/moo-resig-ender-my/9)
 
@@ -33,7 +33,7 @@ TODO
 
 Example of Use
 ==============
-    
+
 Simple instantiation
 --------------------
     var Example = Blueprint({
@@ -43,10 +43,10 @@ Simple instantiation
         method1 : function(){},
         method2 : fucntion(){}
     });
-    
+
     var example = new Example('args');
     example.method1();
-    
+
 Lazy instantiation with Parent Object
 -------------------------------------
 
@@ -58,11 +58,11 @@ Lazy instantiation with Parent Object
             Example2.Parent.method2.call(this)
         }
     });
-    
+
     var example2 = new Example2();
     example2.initialize();
     example2.method2()
-    
+
 Mixins
 ------
 
@@ -70,7 +70,7 @@ Mixins
         mixinMethod1 : function(){},
         mixinMethod2 : function()
     });
-    
+
     var Example3 = Blueprint({
         Extends : Example2, // Optional
         Borrows : [Mixins],
@@ -78,7 +78,7 @@ Mixins
             Example3.Parent.method2.call(this) // Call Parent method
         }
     });
-    
+
     var example3 = new Example3();
     example3.mixin1Method1();
 
@@ -93,9 +93,9 @@ Static Methods
             staticMethod : function(){}
         }
     });
-    
+
     Example4.staticMethod();
-    
+
 ---
 
 
