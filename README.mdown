@@ -14,7 +14,7 @@ It supports:
 * __Inheritance__ one object can inherit methods from another.
 * __Mixins__ one object can "inherit" several methods from several objects, as their own.
 * __Context__ A Bind method similar to MooTools where you could easily fix the methods context (useful for events…).
-* __Super__ Call parent methods, even if they were "overwritten".
+* __Parent__ Call parent methods, even if they were "overwritten".
 * __Constructor/Lazy Instantion__ 
 * __Static Methods__ these are not inherited by child classes.
 * __Fast__ its instanciation should be *au pair* with the fastest Class systems available. [JSPerf Perfomance Page](http://jsperf.com/moo-resig-ender-my/9)
@@ -37,7 +37,7 @@ Example of Use
 Simple instantiation
 --------------------
     var Example = Blueprint({
-        init : function(){
+        initialize : function(){
             // code that will run on instantiation
         },
         method1 : function(){},
@@ -52,10 +52,10 @@ Lazy instantiation with Parent Object
 
     var Example2 = Blueprint({
         Extends : Example,
-        initialize : function(){},
+        init : function(){},
         method2 : function(){
             // Call parent method
-            Example2.Super.method2.call(this)
+            Example2.Parent.method2.call(this)
         }
     });
     
@@ -73,9 +73,9 @@ Mixins
     
     var Example3 = Blueprint({
         Extends : Example2, // Optional
-        Implements : [Mixins],
+        Borrows : [Mixins],
         method2 : function(){
-            Example3.Super.method2.call(this) // Call Parent method
+            Example3.Parent.method2.call(this) // Call Parent method
         }
     });
     
@@ -87,9 +87,9 @@ Static Methods
 
     var Example4 = Blueprint({
         method4 : function(){
-            Example4.Super.method2.call(this) // Call Parent method
+            Example4.Parent.method2.call(this) // Call Parent method
         },
-        Static : {
+        Statics : {
             staticMethod : function(){}
         }
     });
