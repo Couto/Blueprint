@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>Blueprint - Tests Page</title>
+        <link rel="stylesheet" href="qunit/qunit/qunit.css">
+        <script type="text/javascript" charset="utf-8" src="qunit/qunit/qunit.js"></script>
+        <script type="text/javascript" charset="utf-8" src="http://requirejs.org/docs/release/1.0.4/minified/require.js"></script>
+    </head>
+    <body>
+        <h1 id="qunit-header">Blueprint's Unit Tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+        <div id="qunit-fixture">test markup, will be hidden</div>
+        <script>
+            require.config({
+                urlArgs: "cache=" + (+new Date())
+            });
+            require(['../src/Blueprint.amd'], function(Blueprint) {
+                console.log(Blueprint)
+                var base = {
+                        property: "foo",
+                        method1: function() {
+                            document.write("I was written with the method1 from First <br />");
+                        },
+                        method2: function() {
+                            document.write("I was writter with the method2 from the First <br />")
+                        }
+                    },
+                    First = Blueprint(base),
+
+                    Second = Blueprint({
+                        Extends: First,
+                        method3: function() {
+                            document.write("I was written with the method3 from the Second <br />");
+                            Second.Parent.method1.call(this);
+                        },
+                        Statics: {
+                            staticFunction: function() {
+                                document.write("I was written with the staticFunction from the Second <br />");
+                            }
+                        }
+                    }),
+
+
+                    Mixin = Blueprint({
+                        mixinMethod1: function() {
+                            document.write("I was written with the mixinMethod1 from the Mixin <br />");
+                        },
+                        mixinMethod2: function() {
+                            document.write("I was written with the mixinMethod2 from the Mixin <br />");
+                        },
+                        mixinMethod3: function() {
+                            document.write("I was written with the mixinMethod3 from the Mixin <br />");
+                        }
+                    }),
+
+
+
+                    Third = Blueprint({
+                        Borrows: [Mixin],
+                        method4: function() {}
+                    }),
+
+
+
+                    Forth = new Blueprint({
+                        Extends: Third,
+                        Borrows: [Mixin],
+                        initialize: function(div) {
+                            div.setAttribute('id', 'example');
+                            document.getElementById('qunit-fixture').appendChild(div);
+                        },
+                        method4: function() {
+                            document.write("I was written with the method4 from the Forth and i called the mixinMethod3 <br />");
+                            this.mixinMethod3()
+                        }
+                    });
+
+
+
+                third = new Third(),
+
+
+
+                module("Instanciation Tests");
+
+
+
+                test("Instanciated Object should have Class methods and Properties", function() {
+                    var first = new First();
+                    equal(first.method1, base.method1, "Instanciated Object has method from base Object");
+                    equal(first.method2, base.method2, "Instanciated Object has method from base Object");
+                    equal(first.property, 'foo', "Instanciated Object has property from base Object");
+                    equal(first.method1, First.prototype.method1, "Instanciated Object has method from Class prototype");
+                    equal(first.method2, First.prototype.method2, "Instanciated Object has method from Class prototype");
+                    equal(first.property, First.prototype.property, "Instanciated Object has property from Class prototype");
+                    expect(6)
+                });
+
+
+
+                test("Class extending a Class, should have methods from Class and extended Class", function() {
+                    var second = new Second();
+                    equal(second.method3, Second.prototype.method3, "Instanciated Object has method from Class child");
+                    equal(second.method2, base.method2, "Instanciated Object has method from base Object");
+                    equal(second.method1, base.method1, "Instanciated Object has method from base Object");
+                    equal(second.property, base.property, "Instanciated Object has property from base Object");
+                    equal(second.method2, First.prototype.method2, "Instanciated Object has method from extended Class");
+                    equal(second.method1, First.prototype.method1, "Instanciated Object has method from extended Class");
+                    equal(second.property, First.prototype.property, "Instanciated Object has property from extended Class");
+                    expect(7);
+                });
+
+
+
+                test("Class with defined initialize should run at instanciation time", function() {
+                    var div = document.createElement('div'),
+                        forth = new Forth(div),
+                        allocatedDiv = document.getElementById('example');
+
+                    equal(div, allocatedDiv, "Object was in the DOM meaning that init ran at initialization");
+                    expect(1);
+                });
+
+
+
+                test("Class with declared Mixins, should have mixin's methods", function() {
+                    var third = new Third();
+                    equal(third.mixinMethod1, Mixin.prototype.mixinMethod1, 'Class inherited Mixin\'s method');
+                    equal(third.mixinMethod2, Mixin.prototype.mixinMethod2, 'Class inherited Mixin\'s method');
+                    equal(third.mixinMethod3, Mixin.prototype.mixinMethod3, 'Class inherited Mixin\'s method');
+                    equal(third.method4, Third.prototype.method4, 'Class remain with it\'s own method');
+                    expect(4);
+                });
+
+                test("Class using plain object as mixins, should have mixins methods", function() {
+                    var mixinObj = {
+                        mixinObjMethod1: function() {},
+                        mixinObjMethod2: function() {},
+                        mixinObjMethod3: function() {},
+                    },
+                        Fifth = Blueprint({
+                            Borrows: [mixinObj],
+                            method1: function() {},
+                            method2: function() {}
+                        }),
+                        fifth = new Fifth();
+                    console.log(fifth);
+                    equal(mixinObj.mixinObjMethod1, fifth.mixinObjMethod1, 'Class inherited Mixin\'s method');
+                    equal(mixinObj.mixinObjMethod2, fifth.mixinObjMethod2, 'Class inherited Mixin\'s method');
+                    equal(mixinObj.mixinObjMethod3, fifth.mixinObjMethod3, 'Class inherited Mixin\'s method');
+                    equal(fifth.method1, Fifth.prototype.method1, 'Class remain with it\'s own method');
+                    expect(4);
+                });
+
+
+
+                module("Parenting");
+
+
+
+                test("Class should have access to it's parent", function() {
+                    var second = new Second();
+                    equal(Second.Parent, First.prototype, 'It can access it\'s parent');
+                });
+
+
+
+                module("Static Methods");
+
+
+
+                test("Static methods should be accessible", function() {
+                    notEqual(Second.staticFunction, undefined, "Static methods are acessible")
+                });
+
+            });
+        </script>
+    </body>
+</html>

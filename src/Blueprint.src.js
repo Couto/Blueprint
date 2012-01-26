@@ -1,5 +1,4 @@
 /**
- *
  * Blueprint - Sugar syntax for Prototypal Inheritance
  *
  * @author Luis Couto
@@ -30,9 +29,11 @@
  *          method2 : function () {},
  *          method3 : function () {}
  *      });
+ *
  * @param {Object} methods Object
  * @returns Function
  */
+
 function Blueprint(methods) {
     'use strict';
 
@@ -48,6 +49,7 @@ function Blueprint(methods) {
      * @param {Object} target Object's that will get the new methods
      * @returns undefined
      */
+
     function extend(methods, target) {
         var k;
         for (k in methods) {
@@ -68,19 +70,21 @@ function Blueprint(methods) {
      * @param {Object} Target that will receive the methods
      * @returns undefined
      */
+
     function borrows(arr, target) {
 
         var i = arr.length - 1,
-            constructorBck;
+            constructorBck, current;
 
         for (i; i >= 0; i -= 1) {
-            if (arr[i].prototype && arr[i].prototype.constructor) {
-                constructorBck = arr[i].prototype.constructor;
-                delete arr[i].prototype.constructor;
-                extend(arr[i].prototype, target.prototype);
-                arr[i].prototype.constructor = constructorBck;
+            current = arr[i];
+            if (current.prototype && current.prototype.constructor) {
+                constructorBck = current.prototype.constructor;
+                delete current.prototype.constructor;
+                extend(current.prototype, target.prototype);
+                current.prototype.constructor = constructorBck;
             } else {
-                extend(arr[i].prototype || arr[i], target.prototype);
+                extend(current.prototype || current, target.prototype);
             }
         }
     }
@@ -94,6 +98,7 @@ function Blueprint(methods) {
      * @param {Function}
      * @returns function handler with fixed context
      */
+
     function binds(arr, context, target) {
         var proxy = function (func) {
 
@@ -101,11 +106,12 @@ function Blueprint(methods) {
                 return func.bind(context);
             }
 
-            return function () {
+            return function() {
                 return func.apply(context, arguments);
             };
 
-        }, i = arr.length - 1;
+        },
+            i = arr.length - 1;
 
         for (i; i >= 0; i -= 1) {
             target[arr[i]] = proxy(target[arr[i]], blueprint);
@@ -123,6 +129,7 @@ function Blueprint(methods) {
      * @returns {Function} Instance
      * @type Function
      */
+
     function clone(o) {
         function F() {}
         F.prototype = o;
@@ -143,8 +150,14 @@ function Blueprint(methods) {
 
     blueprint.prototype.constructor = blueprint;
 
-    if (methods.Borrows) { borrows(methods.Borrows, blueprint); }
-    if (methods.Binds) { binds(methods.Binds, blueprint, blueprint.prototype); }
+    if (methods.Borrows) {
+        borrows(methods.Borrows, blueprint);
+    }
+
+    if (methods.Binds) {
+        binds(methods.Binds, blueprint, blueprint.prototype);
+    }
+
     if (methods.Statics) {
         extend(methods.Statics, blueprint);
         delete blueprint.prototype.Static;
