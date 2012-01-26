@@ -34,7 +34,7 @@
  * @returns Function
  */
 
-(function (){
+(function (root){
 
     function Blueprint(methods) {
         'use strict';
@@ -171,9 +171,10 @@
     }
 
 
-    if ( typeof define === "function" && define.amd && define.amd.Blueprint ) {
-    	define( "Blueprint", [], function () { return Blueprint; } );
+    if (typeof define === "function" && define.amd) {
+    	define("Blueprint", [], function () { return Blueprint; } );
     } else {
-        return Blueprint;
+        root.Blueprint = Blueprint;
     }
-});
+
+}(this));

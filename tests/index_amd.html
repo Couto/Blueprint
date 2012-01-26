@@ -16,9 +16,12 @@
         <div id="qunit-fixture">test markup, will be hidden</div>
         <script>
             require.config({
+                paths: {
+                    "Blueprint" : "../src/Blueprint"
+                },
                 urlArgs: "cache=" + (+new Date())
             });
-            require(['../src/Blueprint.amd'], function(Blueprint) {
+            require(['Blueprint'], function(Blueprint) {
                 console.log(Blueprint)
                 var base = {
                         property: "foo",
