@@ -33,7 +33,6 @@
  * @param {Object} methods Object
  * @returns Function
  */
-
 (function (root){
 
     function Blueprint(methods) {
@@ -51,7 +50,6 @@
          * @param {Object} target Object's that will get the new methods
          * @returns undefined
          */
-
         function extend(methods, target) {
             var k;
             for (k in methods) {
@@ -72,7 +70,6 @@
          * @param {Object} Target that will receive the methods
          * @returns undefined
          */
-
         function borrows(arr, target) {
 
             var i = arr.length - 1,
@@ -100,7 +97,6 @@
          * @param {Function}
          * @returns function handler with fixed context
          */
-
         function binds(arr, context, target) {
             var proxy = function (func) {
 
@@ -131,7 +127,6 @@
          * @returns {Function} Instance
          * @type Function
          */
-
         function clone(o) {
             function F() {}
             F.prototype = o;
