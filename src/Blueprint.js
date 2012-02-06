@@ -16,158 +16,105 @@
  * @copyright 2012, Luis Couto
  *
  * @example
- *      var Example = Blueprint({
- *          Extends : ParentBlueprint,
- *          Borrows : [Mixin1, Mixin2],
- *          Binds   : ['method1', 'method2'],
- *          Statics : {
- *              staticMethod1 : function(){},
- *              staticMethod2 : function(){},
- *              staticMethod3 : function(){},
+ *      var Polygon = Blueprint({
+ *          init : function (vertices) {
+ *              this.vertices = vertices;
  *          },
- *          initialize : function () {},
- *          method1 : function () {},
- *          method2 : function () {},
- *          method3 : function () {}
+ *          draw : function () {}
+ *      }).implement(Bezier).bind('draw');
+ *
+ *      var FilledPolygon = Polygon.create({
+ *          init : function (vertices, color) {
+ *              this.color = color;
+ *              Object.getPrototypeOf(FilledPolygon).call(this, vertices);
+ *          }
  *      });
+ *
  * @param {Object} methods Object
  * @returns Function
  */
-(function (root){
+(function(root) {
 
-    function Blueprint(methods) {
-        'use strict';
+    'use strict';
 
-        var blueprint;
-
-
-
+    var Blueprint = {
         /**
-         * Extends an object with another given object
+         * Describe what this method does
          *
-         * @private
-         *
-         * @param {Object} target Object's that will get the new methods
-         * @returns undefined
+         * @public
+         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+         * @returns Describe what it returns
+         * @type String|Object|Array|Boolean|Number
          */
-        function extend(methods, target) {
-            var k;
-            for (k in methods) {
-                if (methods.hasOwnProperty(k)) {
-                    target[k] = methods[k];
+        create: function(methods) {
+            var instance;
+
+            function F() {}
+            F.prototype = this;
+            instance = new F();
+            if (methods) {
+                this.implement.call(instance, methods);
+            }
+            return instance;
+        },
+        /**
+         * Describe what this method does
+         *
+         * @public
+         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+         * @returns Describe what it returns
+         * @type String|Object|Array|Boolean|Number
+         */
+        implement: function(methods) {
+            if (methods) {
+                var k;
+                for (k in methods) {
+                    if (methods.hasOwnProperty(k)) {
+                        this[k] = methods[k];
+                    }
                 }
             }
-        }
+            return this;
+        },
 
+        bind: function(methods) {
+            var methds = Object.prototype.toString.call(methods) !== '[object Array]' ? [methods] : methods,
+                i = methds.length - 1,
+                proxier = function(fn, context) {
+                    var isType = Object.prototype.toString,
+                        slice = Array.prototype.slice,
+                        tmp, args, proxy;
 
+                    if (isType.call(context) === '[object String]') {
+                        tmp = fn[context];
+                        context = fn;
+                        fn = tmp;
+                    }
 
-        /**
-         * For an Array of Objects, add their methods/properties to
-         * target's prototype
-         *
-         * @private
-         * @param {Array} arr Array of objects that will give their methods
-         * @param {Object} Target that will receive the methods
-         * @returns undefined
-         */
-        function borrows(arr, target) {
+                    if (isType.call(fn) !== '[object Function]') {
+                        return undefined;
+                    }
 
-            var i = arr.length - 1,
-                constructorBck, current;
+                    args = slice.call(arguments, 2);
+                    proxy = function () {
+                        return fn.apply(context, args.concat(slice.call(arguments)));
+                    };
 
-            for (i; i >= 0; i -= 1) {
-                current = arr[i];
-                if (current.prototype && current.prototype.constructor) {
-                    constructorBck = current.prototype.constructor;
-                    delete current.prototype.constructor;
-                    extend(current.prototype, target.prototype);
-                    current.prototype.constructor = constructorBck;
-                } else {
-                    extend(current.prototype || current, target.prototype);
-                }
-            }
-        }
-
-
-
-        /**
-         * Fixes the context in given methods
-         *
-         * @private
-         * @param {Function}
-         * @returns function handler with fixed context
-         */
-        function binds(arr, context, target) {
-            var proxy = function (func) {
-
-                if (Function.prototype.bind) {
-                    return func.bind(context);
-                }
-
-                return function() {
-                    return func.apply(context, arguments);
+                    return proxy;
                 };
 
-            },
-                i = arr.length - 1;
-
             for (i; i >= 0; i -= 1) {
-                target[arr[i]] = proxy(target[arr[i]], blueprint);
+                this[methds[i]] = proxier(this[methds[i]], this);
             }
+
+            return this;
         }
-
-
-
-        /**
-         * Copies the given object into a freshly
-         * created empty function's prototype
-         *
-         * @private
-         * @param {Object} o Object
-         * @returns {Function} Instance
-         * @type Function
-         */
-        function clone(o) {
-            function F() {}
-            F.prototype = o;
-            return new F();
-        }
-
-
-
-        blueprint = methods.initialize || function blueprint() {};
-
-        if (methods.Extends) {
-            blueprint.Parent = methods.Extends.prototype;
-            blueprint.prototype = clone(blueprint.Parent);
-            extend(methods, blueprint.prototype);
-        } else {
-            blueprint.prototype = methods;
-        }
-
-        blueprint.prototype.constructor = blueprint;
-
-        if (methods.Borrows) {
-            borrows(methods.Borrows, blueprint);
-        }
-
-        if (methods.Binds) {
-            binds(methods.Binds, blueprint, blueprint.prototype);
-        }
-
-        if (methods.Statics) {
-            extend(methods.Statics, blueprint);
-            delete blueprint.prototype.Static;
-        }
-
-
-
-        return blueprint;
-    }
-
+    };
 
     if (typeof define === "function" && define.amd) {
-    	define("Blueprint", [], function () { return Blueprint; } );
+        define("Blueprint", [], function() {
+            return Blueprint;
+        });
     } else {
         root.Blueprint = Blueprint;
     }
