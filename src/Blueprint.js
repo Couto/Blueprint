@@ -52,9 +52,11 @@
             function F() {}
             F.prototype = this;
             instance = new F();
+
             if (methods) {
                 this.implement.call(instance, methods);
             }
+
             return instance;
         },
         /**
@@ -76,47 +78,62 @@
             }
             return this;
         },
-
+        /**
+         * Describe what this method does
+         *
+         * @public
+         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+         * @returns Describe what it returns
+         * @type String|Object|Array|Boolean|Number
+         */
         bind: function(methods) {
             var methds = Object.prototype.toString.call(methods) !== '[object Array]' ? [methods] : methods,
-                i = methds.length - 1,
-                proxier = function(fn, context) {
-                    var isType = Object.prototype.toString,
-                        slice = Array.prototype.slice,
-                        tmp, args, proxy;
-
-                    if (isType.call(context) === '[object String]') {
-                        tmp = fn[context];
-                        context = fn;
-                        fn = tmp;
-                    }
-
-                    if (isType.call(fn) !== '[object Function]') {
-                        return undefined;
-                    }
-
-                    args = slice.call(arguments, 2);
-                    proxy = function () {
-                        return fn.apply(context, args.concat(slice.call(arguments)));
-                    };
-
-                    return proxy;
-                };
+                i = methds.length - 1;
 
             for (i; i >= 0; i -= 1) {
-                this[methds[i]] = proxier(this[methds[i]], this);
+                this[methds[i]] = this.proxy(this[methds[i]], this);
             }
 
             return this;
+        },
+        /**
+         * Describe what this method does
+         *
+         * @public
+         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+         * @returns Describe what it returns
+         * @type String|Object|Array|Boolean|Number
+         */
+        proxy : function(fn, context) {
+            var isType = Object.prototype.toString,
+                slice = Array.prototype.slice,
+                tmp, args, proxy;
+
+            if (isType.call(context) === '[object String]') {
+                tmp = fn[context];
+                context = fn;
+                fn = tmp;
+            }
+
+            if (isType.call(fn) !== '[object Function]') {
+                return undefined;
+            }
+
+            args = slice.call(arguments, 2);
+            proxy = function () {
+                return fn.apply(context, args.concat(slice.call(arguments)));
+            };
+
+            return proxy;
         }
+
     };
 
+    /**
+     * Expose Blueprint to the Global context with support for AMD Modules
+     */
     if (typeof define === "function" && define.amd) {
-        define("Blueprint", [], function() {
-            return Blueprint;
-        });
-    } else {
-        root.Blueprint = Blueprint;
-    }
+        define("Blueprint", [], function() { return Blueprint; });
+    } else { root.Blueprint = Blueprint; }
 
 }(this));
