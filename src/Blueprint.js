@@ -4,7 +4,7 @@
  *
  * @author Luis Couto
  * @contact lcouto87@gmail.com
- * @version 0.2
+ * @version 0.0.3
  *
  * @license
  *     This program is free software. It comes without any warranty, to
@@ -30,6 +30,7 @@
  *          method2 : function () {},
  *          method3 : function () {}
  *      });
+ *
  * @param {Object} methods Object
  * @returns Function
  */
@@ -168,8 +169,11 @@
 
     if (typeof define === "function" && define.amd) {
     	define("Blueprint", [], function () { return Blueprint; } );
+    } else if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports) {
+        module.exports = Blueprint;
     } else {
         root.Blueprint = Blueprint;
     }
+
 
 }(this));
