@@ -1,3 +1,1 @@
-[submodule "vendor/chai"]
-	path = vendor/chai
-	url = git://github.com/logicalparadox/chai.git
+
