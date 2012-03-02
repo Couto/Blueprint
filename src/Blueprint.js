@@ -130,10 +130,15 @@
     };
 
     /**
-     * Expose Blueprint to the Global context with support for AMD Modules
+     * Expose Blueprint to the Global context with support for AMD and Node Modules
      */
-    if (typeof define === "function" && define.amd) {
-        define("Blueprint", [], function() { return Blueprint; });
-    } else { root.Blueprint = Blueprint; }
+     if (typeof define === "function" && define.amd) {
+         define("Blueprint", [], function () { return Blueprint; } );
+     } else if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports) {
+         module.exports = Blueprint;
+     } else {
+         root.Blueprint = Blueprint;
+     }
+
 
 }(this));
