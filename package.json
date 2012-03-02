@@ -4,6 +4,7 @@
   "description": "A simple Sugar for Prototypal Inheritance",
   "version": "0.0.3",
   "homepage": "http://github.com/Couto/Blueprint",
+  "keywords": ["prototypal", "sugar", "blueprint"],
   "repository": {
     "type": "git",
     "url": "git://github.com/Couto/Blueprint.git"
