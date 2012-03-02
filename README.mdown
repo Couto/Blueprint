@@ -4,7 +4,7 @@ Blueprint - Sugar syntax for Prototypal Inheritance
 Why another?
 ------------
 
-I wanted a small utility (858B bytes minified/413 bytes gzipped) that could easily be used in a cross-browser fashion and still be AMD and Node.js compatible. 
+I wanted a small utility (858B bytes minified/413 bytes gzipped) that could easily be used in a cross-browser fashion and still be AMD and Node.js compatible.
 
 yeahh… that's the only reason.
 
@@ -16,9 +16,24 @@ TODO
 ----
 * A decent page for tests.
 * Finish testing.
-* Measure the Parent call performace.
+* Polyfill for the Object.getPrototypeOf and Object.isPrototypeOf methods
 
-----
+---
+
+Installation
+============
+
+as a Node.js Package
+--------------------
+
+    $ npm install Blueprint-Sugar
+
+Require package
+---------------
+
+    var Blueprint = require('Blueprint-Sugar');
+
+---
 
 Example of Use
 ==============
@@ -36,7 +51,7 @@ Instanciate the object
 ----------------------
 
     var example = Example.create();
-    
+
 Instanciate and extend an object
 --------------------------------
 
@@ -48,13 +63,14 @@ Add methods/properties to instance
 ----------------------------------
 
     // I find myself adding properties/methods to instances a lot,
-    // this is just a helper. Could ease some work while working 
+    // this is just a helper. Could ease some work while working
     // with mixins…
-    
+
     example.implement({
         moreMethods : function () {},
         moreProperties : 2
     });
 
+----
 
 Feel free to pull requests, open issues and so on… right now i'm quite open to ideas, improvements and suggestions.

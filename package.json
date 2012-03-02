@@ -1,0 +1,17 @@
+{
+  "author": "Luis Couto <couto@15minuteslate.net> (15minuteslate.net)",
+  "name": "Blueprint-Sugar",
+  "description": "A simple Sugar for Prototypal Inheritance",
+  "version": "0.0.3",
+  "homepage": "http://github.com/Couto/Blueprint",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Couto/Blueprint.git"
+  },
+  "main": "src/Blueprint.js",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
