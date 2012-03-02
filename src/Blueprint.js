@@ -21,7 +21,7 @@
  *              this.vertices = vertices;
  *          },
  *          draw : function () {}
- *      }).implement(Bezier).bind('draw');
+ *      }).implement(Bezier);
  *
  *      var FilledPolygon = Polygon.create({
  *          init : function (vertices, color) {
@@ -39,19 +39,23 @@
 
     var Blueprint = {
         /**
-         * Describe what this method does
+         * Creates a new instance of the current Blueprint
+         * if an object is given as a parameter, it will also extend
+         * the new instance with that object.
          *
          * @public
-         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
-         * @returns Describe what it returns
-         * @type String|Object|Array|Boolean|Number
+         * @param {Object} [methods] if given, it will extend the created instance with the object given.
+         * @returns {Object} a new instance of the object
          */
-        create: function(methods) {
-            var instance;
+        create: function (methods) {
+            var instance,
+                clone = Object.create || function (obj) {
+                    function F() {}
+                    F.prototype = obj;
+                    return new F();
+                };
 
-            function F() {}
-            F.prototype = this;
-            instance = new F();
+            instance = clone(this);
 
             if (methods) {
                 this.implement.call(instance, methods);
@@ -60,49 +64,31 @@
             return instance;
         },
         /**
-         * Describe what this method does
+         * Adds an object properties/methods to the current instance
          *
          * @public
-         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
-         * @returns Describe what it returns
-         * @type String|Object|Array|Boolean|Number
+         * @param {Object} obj An object whose properties/methods will be copied to the current instance
+         * @returns {Object} this
          */
-        implement: function(methods) {
-            if (methods) {
+        implement: function (obj) {
+            if (obj) {
                 var k;
-                for (k in methods) {
-                    if (methods.hasOwnProperty(k)) {
-                        this[k] = methods[k];
+                for (k in obj) {
+                    if (obj.hasOwnProperty(k)) {
+                        this[k] = obj[k];
                     }
                 }
             }
             return this;
         },
+
         /**
-         * Describe what this method does
+         * Helper method to fix the context (equivalent to ES5 Function.bind)
          *
          * @public
-         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
-         * @returns Describe what it returns
-         * @type String|Object|Array|Boolean|Number
-         */
-        bind: function(methods) {
-            var methds = Object.prototype.toString.call(methods) !== '[object Array]' ? [methods] : methods,
-                i = methds.length - 1;
-
-            for (i; i >= 0; i -= 1) {
-                this[methds[i]] = this.proxy(this[methds[i]], this);
-            }
-
-            return this;
-        },
-        /**
-         * Describe what this method does
-         *
-         * @public
-         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
-         * @returns Describe what it returns
-         * @type String|Object|Array|Boolean|Number
+         * @param {Function} fn Function that will be binded to the new context
+         * @param {Object} context Context
+         * @returns {Function} function proxied to the new context
          */
         proxy : function(fn, context) {
             var isType = Object.prototype.toString,
