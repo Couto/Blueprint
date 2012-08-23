@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/Couto/Blueprint.png)](http://travis-ci.org/Couto/Blueprint)
 Blueprint - Sugar syntax for Prototypal Inheritance
 ===================================================
 
