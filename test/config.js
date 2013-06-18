@@ -2,7 +2,7 @@ require.config({
     paths: {
         'mocha' : '../node_modules/mocha/mocha',
         'expect': '../node_modules/expect.js/expect',
-        'Blueprint' : '../index.js'
+        'Blueprint' : '../src/Blueprint'
     },
     shim: {
         'mocha':  { exports : 'mocha'  },
@@ -11,10 +11,4 @@ require.config({
     urlArgs: 'cache=' + (+new Date())
 });
 
-require([
-    'mocha',
-    'expect',
-    'instantiation.test',
-    'parenting.test',
-    'static.test'
-], function (mocha) { mocha.run(); });
+require(['index.test']);

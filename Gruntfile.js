@@ -15,10 +15,16 @@ module.exports = function (grunt) {
             }
         },
 
-        uglify: {
+        requirejs: {
             dist: {
-                files: {
-                    'dist/Blueprint.min.js': ['src/Blueprint.js']
+                options: {
+                    optimize: "uglify2",
+                    useStrict: true,
+                    wrap: {
+                        start: "define(function() {",
+                        end: "});"
+                    },
+                    out: 'dist/Blueprint.min.js'
                 }
             }
         },

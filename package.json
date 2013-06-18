@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git://github.com/Couto/Blueprint.git"
   },
-  "main": "src/Blueprint.js",
+  "main": "index.js",
   "engines": {
     "node": "*"
   },
@@ -26,6 +26,6 @@
     "grunt-cafe-mocha": "~0.1.6",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.0",
-    "grunt-contrib-uglify": "~0.2.2"
+    "grunt-contrib-requirejs": "~0.4.1"
   }
 }

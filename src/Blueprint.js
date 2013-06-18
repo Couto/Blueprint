@@ -21,7 +21,7 @@
  *              this.vertices = vertices;
  *          },
  *          draw : function () {}
- *      }).implement(Bezier);
+ *      }).implement(Bezier).bind('draw');
  *
  *      var FilledPolygon = Polygon.create({
  *          init : function (vertices, color) {
@@ -37,8 +37,7 @@
 
     'use strict';
 
-    var toString = Object.prototype.toString,
-        slice = Array.prototype.slice,
+    var slice = Array.prototype.slice,
 
         /**
          * Helper method to fix the context (equivalent to ES5 Function.bind)
@@ -63,70 +62,76 @@
             }
         }()),
 
-        Blueprint = {
         /**
-         * Creates a new instance of the current Blueprint
-         * if an object is given as a parameter, it will also extend
-         * the new instance with that object.
+         * Helper method to beget objects
          *
          * @public
-         * @param {Object} [methods] if given, it will extend the created instance with the object given.
-         * @returns {Object} a new instance of the object
+         * @param {Object} object to extend
+         * @returns {Object} extended object
          */
-        create: function (methods) {
-            var instance,
-                clone = Object.create || function (obj) {
-                    function F() {}
-                    F.prototype = obj;
-                    return new F();
-                };
-
-            instance = clone(this);
-
-            if (methods) {
-                this.implement.call(instance, methods);
-            }
-
-            return instance;
+        clone = Object.create || function (obj) {
+            function F() {}
+            F.prototype = obj;
+            return new F();
         },
-        /**
-         * Adds an object properties/methods to the current instance
-         *
-         * @public
-         * @param {Object} obj An object whose properties/methods will be copied to the current instance
-         * @returns {Object} this
-         */
-        implement: function (obj) {
-            if (obj) {
-                var k;
-                for (k in obj) {
-                    if (obj.hasOwnProperty(k)) {
-                        this[k] = obj[k];
+
+        Blueprint = {
+            /**
+             * Creates a new instance of the current Blueprint
+             * if an object is given as a parameter, it will also extend
+             * the new instance with that object.
+             *
+             * @public
+             * @param {Object} [methods] if given, it will extend the created instance with the object given.
+             * @returns {Object} a new instance of the object
+             */
+            create: function (methods) {
+                var instance = clone(this);
+
+                if (methods) {
+                    this.implement.call(instance, methods);
+                }
+
+                return instance;
+            },
+            /**
+             * Adds an object properties/methods to the current instance
+             *
+             * @public
+             * @param {Object} obj An object whose properties/methods will be copied to the current instance
+             * @returns {Object} this
+             */
+            implement: function (obj) {
+                if (obj) {
+                    var k;
+                    for (k in obj) {
+                        if (obj.hasOwnProperty(k)) {
+                            this[k] = obj[k];
+                        }
                     }
                 }
+                return this;
+            },
+            /**
+             * Describe what this method does
+             *
+             * @public
+             * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+             * @returns Describe what it returns
+             * @type String|Object|Array|Boolean|Number
+             */
+            bind: function (methods) {
+                methods = [].concat(methods);
+                var i = methods.length - 1;
+
+                for (i; i >= 0; i -= 1) {
+                    this[methods[i]] = proxy(this[methods[i]], this);
+                }
+
+                return this;
             }
-            return this;
-        },
-        /**
-         * Describe what this method does
-         *
-         * @public
-         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
-         * @returns Describe what it returns
-         * @type String|Object|Array|Boolean|Number
-         */
-        bind: function (methods) {
-            var methds = toString.call(methods) !== '[object Array]' ? [methods] : methods,
-                i = methds.length - 1;
 
-            for (i; i >= 0; i -= 1) {
-                this[methds[i]] = proxy(this[methds[i]], this);
-            }
-
-            return this;
-        }
-
-    };
+        };
 
     /**
      * Expose Blueprint to the Global context with support for AMD and Node Modules
