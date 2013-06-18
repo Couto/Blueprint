@@ -4,7 +4,11 @@
   "description": "A simple Sugar for Prototypal Inheritance",
   "version": "0.0.3",
   "homepage": "http://github.com/Couto/Blueprint",
-  "keywords": ["prototypal", "sugar", "blueprint"],
+  "keywords": [
+    "prototypal",
+    "sugar",
+    "blueprint"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/Couto/Blueprint.git"
@@ -14,5 +18,14 @@
     "node": "*"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "mocha": "~1.11.0",
+    "requirejs": "~2.1.6",
+    "expect.js": "~0.2.0",
+    "grunt": "~0.4.1",
+    "grunt-cafe-mocha": "~0.1.6",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-uglify": "~0.2.2"
+  }
 }

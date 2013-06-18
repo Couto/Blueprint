@@ -33,11 +33,37 @@
  * @param {Object} methods Object
  * @returns Function
  */
-(function(root) {
+(function (root) {
 
     'use strict';
 
-    var Blueprint = {
+    var toString = Object.prototype.toString,
+        slice = Array.prototype.slice,
+
+        /**
+         * Helper method to fix the context (equivalent to ES5 Function.bind)
+         *
+         * @public
+         * @param {Function} fn Function that will be binded to the new context
+         * @param {Object} context Context
+         * @returns {Function} function proxied to the new context
+         */
+        proxy = (function () {
+            if (Function.prototype.bind) {
+                return function (fn, context) {
+                    return fn.bind(context);
+                };
+            } else {
+                return function (fn, context) {
+                    var args = slice.call(arguments, 2);
+                    return function () {
+                        return fn.apply(context, args.concat(slice.call(arguments)));
+                    };
+                };
+            }
+        }()),
+
+        Blueprint = {
         /**
          * Creates a new instance of the current Blueprint
          * if an object is given as a parameter, it will also extend
@@ -81,36 +107,23 @@
             }
             return this;
         },
-
         /**
-         * Helper method to fix the context (equivalent to ES5 Function.bind)
+         * Describe what this method does
          *
          * @public
-         * @param {Function} fn Function that will be binded to the new context
-         * @param {Object} context Context
-         * @returns {Function} function proxied to the new context
+         * @param {String|Object|Array|Boolean|Number} paramName Describe this parameter
+         * @returns Describe what it returns
+         * @type String|Object|Array|Boolean|Number
          */
-        proxy : function(fn, context) {
-            var isType = Object.prototype.toString,
-                slice = Array.prototype.slice,
-                tmp, args, proxy;
+        bind: function (methods) {
+            var methds = toString.call(methods) !== '[object Array]' ? [methods] : methods,
+                i = methds.length - 1;
 
-            if (isType.call(context) === '[object String]') {
-                tmp = fn[context];
-                context = fn;
-                fn = tmp;
+            for (i; i >= 0; i -= 1) {
+                this[methds[i]] = proxy(this[methds[i]], this);
             }
 
-            if (isType.call(fn) !== '[object Function]') {
-                return undefined;
-            }
-
-            args = slice.call(arguments, 2);
-            proxy = function () {
-                return fn.apply(context, args.concat(slice.call(arguments)));
-            };
-
-            return proxy;
+            return this;
         }
 
     };
@@ -118,12 +131,12 @@
     /**
      * Expose Blueprint to the Global context with support for AMD and Node Modules
      */
-     if (typeof define === "function" && define.amd) {
-         define("Blueprint", [], function () { return Blueprint; } );
-     } else if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports) {
-         module.exports = Blueprint;
-     } else {
-         root.Blueprint = Blueprint;
-     }
+    if (typeof define === 'function' && define.amd) {
+        define('Blueprint', [], function () { return Blueprint; });
+    } else if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports) {
+        module.exports = Blueprint;
+    } else {
+        root.Blueprint = Blueprint;
+    }
 
 }(this));

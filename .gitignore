@@ -2,3 +2,5 @@ _Store*
 ehthumbs.db
 Icon?
 Thumbs.db
+node_modules
+coverage
