@@ -2,7 +2,7 @@ require.config({
     paths: {
         'mocha' : '../node_modules/mocha/mocha',
         'expect': '../node_modules/expect.js/expect',
-        'Blueprint' : '../index.js'
+        'Blueprint' : '../src/Blueprint'
     },
     shim: {
         'mocha':  { exports : 'mocha'  },
